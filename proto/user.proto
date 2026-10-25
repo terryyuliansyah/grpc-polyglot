@@ -15,4 +15,5 @@ message UserRequest {
 message UserResponse {
   string name = 1;
   string email = 2;
+  string phone = 3;
 }

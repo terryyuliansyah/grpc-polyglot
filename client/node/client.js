@@ -1,44 +1,30 @@
-const grpc = require("@grpc/grpc-js");
-const protoLoader = require("@grpc/proto-loader");
-const path = require("path");
+const grpc = require('@grpc/grpc-js');
+const protoLoader = require('@grpc/proto-loader');
+const path = require('path');
 
-// Lokasi file proto
-const PROTO_PATH = path.resolve(__dirname, "../../proto/user.proto");
-
-// Membaca definisi layanan gRPC
+const PROTO_PATH = path.join(__dirname, '..', '..', 'proto', 'user.proto');
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
-    keepCase: true,
-    longs: String,
-    enums: String,
-    defaults: true,
-    oneofs: true,
+  keepCase: true,
+  longs: String,
+  enums: String,
+  defaults: true,
+  oneofs: true,
 });
+const userProto = grpc.loadPackageDefinition(packageDefinition).user;
 
-// Memuat layanan gRPC
-const protoDescriptor = grpc.loadPackageDefinition(packageDefinition);
-const userPackage = protoDescriptor.user;
-
-// Membuat koneksi ke Go gRPC Server
-const client = new userPackage.UserService(
-    "localhost:50051",
-    grpc.credentials.createInsecure()
+const client = new userProto.UserService(
+  'localhost:50051',
+  grpc.credentials.createInsecure()
 );
 
-// Meminta profil pengguna
-client.getUserProfile(
-    { user_id: "123" },
-    (error, response) => {
-        if (error) {
-            console.error("Gagal mengambil data:", error.message);
-            client.close();
-            process.exitCode = 1;
-            return;
-        }
-
-        console.log("Respons dari Go gRPC Server:");
-        console.log(`Nama  : ${response.name}`);
-        console.log(`Email : ${response.email}`);
-
-        client.close();
-    }
-);
+client.GetUserProfile({ user_id: '123' }, (error, response) => {
+  if (error) {
+    console.error('Terjadi error:', error);
+  } else {
+    console.log('Respons dari Go gRPC Server:');
+    console.log(`Nama    : ${response.name}`);
+    console.log(`Email   : ${response.email}`);
+    console.log(`Telepon : ${response.phone}`);
+  }
+  client.close();
+});

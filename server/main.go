@@ -5,8 +5,8 @@ import (
 	"log"
 	"net"
 
-	pb "grpc-polyglot-lab/server/pb"
 	"google.golang.org/grpc"
+	pb "grpc-polyglot-lab/server/pb"
 )
 
 type userServer struct {
@@ -22,6 +22,7 @@ func (s *userServer) GetUserProfile(
 	return &pb.UserResponse{
 		Name:  "Terry",
 		Email: "terry@example.com",
+		Phone: "081234567890",
 	}, nil
 }
 
