@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "grpc-polyglot-lab/server/pb";
+
+service UserService {
+  rpc GetUserProfile (UserRequest) returns (UserResponse);
+}
+
+message UserRequest {
+  string user_id = 1;
+}
+
+message UserResponse {
+  string name = 1;
+  string email = 2;
+}
